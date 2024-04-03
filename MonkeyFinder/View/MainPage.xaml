@@ -2,34 +2,56 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:model="clr-namespace:MonkeyFinder.Model"
+             xmlns:viewmodel="clr-namespace:MonkeyFinder.ViewModel"
+             x:DataType="viewmodel:MonkeysViewModel"
+             Title="{Binding Title}"
              x:Class="MonkeyFinder.View.MainPage">
-    <CollectionView>
-        <CollectionView.ItemsSource>
-            <x:Array Type="{x:Type model:Monkey}">
-                <model:Monkey 
-                    Name="Baboon" 
-                    Location="Africa &amp; Asia"
-                    Image="https://raw.githubusercontent.com/jamesmontemagno/app-monkeys/master/baboon.jpg" />
-                <model:Monkey 
-                    Name="Capuchin Monkey" 
-                    Location="Central &amp; South America"
-                    Image="https://raw.githubusercontent.com/jamesmontemagno/app-monkeys/master/capuchin.jpg" />
-                <model:Monkey 
-                    Name="Red-shanked douc"
-                    Location="Vietnam"
-                    Image="https://raw.githubusercontent.com/jamesmontemagno/app-monkeys/master/douc.jpg" />
-            </x:Array>
-        </CollectionView.ItemsSource>
-        <CollectionView.ItemTemplate>
-            <DataTemplate x:DataType="model:Monkey">
-                <HorizontalStackLayout Padding="10">
-                    <Image Source="{Binding Image}" HeightRequest="100" WidthRequest="100" Aspect="AspectFill" />
-                    <VerticalStackLayout VerticalOptions="Center" Padding="10" Spacing="10">
-                        <Label Text="{Binding Name}" FontSize="24"/>
-                        <Label Text="{Binding Location}" FontSize="10"/>
-                    </VerticalStackLayout>
-                </HorizontalStackLayout>
-            </DataTemplate>
-        </CollectionView.ItemTemplate>
-    </CollectionView>
+    <Grid ColumnDefinitions="*,*"
+          ColumnSpacing="5"
+          RowDefinitions="*, auto"
+          RowSpacing="0">
+        <CollectionView BackgroundColor="Transparent"
+                        Grid.ColumnSpan="2"
+                        ItemsSource="{Binding Monkeys}"
+                        SelectionMode="None">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="model:Monkey">
+                    <Grid Padding="10">
+                        <Frame HeightRequest="125"
+                               Style="{StaticResource CardView}">
+                            <Grid ColumnDefinitions="125,*" 
+                                  Padding="0">
+                                <Image Aspect="AspectFill"
+                                       Source="{Binding Image}"
+                                       HeightRequest="125"
+                                       WidthRequest="125"/>
+                                <VerticalStackLayout Grid.Column="1" 
+                                                     Padding="10"
+                                                     VerticalOptions="Center">
+                                    <Label Text="{Binding Name}" 
+                                           Style="{StaticResource LargeLabel}"/>
+                                    <Label Text="{Binding Location}"  
+                                           Style="{StaticResource LargeLabel}"/>
+                                </VerticalStackLayout>
+                            </Grid>
+                        </Frame>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+        
+        <Button Text="Get Monkeys" 
+                Command="{Binding GetMonkeysCommand}" 
+                Grid.Row="1" 
+                Margin="8"
+                IsEnabled="{Binding IsNotBusy}"
+                Style="{StaticResource ButtonOutline}"/>
+
+        <ActivityIndicator IsVisible="{Binding IsBusy}" 
+                           IsRunning="{Binding IsBusy}" 
+                           VerticalOptions="CenterAndExpand" 
+                           HorizontalOptions="FillAndExpand"
+                           Grid.ColumnSpan="2"
+                           Grid.RowSpan="2"/>
+    </Grid>
 </ContentPage>
