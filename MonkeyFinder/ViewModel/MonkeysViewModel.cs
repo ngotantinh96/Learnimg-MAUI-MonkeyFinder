@@ -81,7 +81,7 @@ public partial class MonkeysViewModel : BaseViewModel
 
         try
         {
-            if (connectivity.NetworkAccess != NetworkAccess.Internet)
+            if (connectivity.NetworkAccess != NetworkAccess.Internet && connectivity.NetworkAccess != NetworkAccess.Local)
             {
                 await Shell.Current.DisplayAlert("Internet Issue", "Please check your internet and try gain!", "OK");
                 return;
